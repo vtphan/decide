@@ -14,7 +14,7 @@ model = decide.Model(df,X,y)
 # Validate the model with logit, decision tree, and random forest
 model.validate()
 
-# Analyze a random 20% sample of the data
+# Analyze a random sample consisting 20% of the data
 model.analyze(0.2)
 ```
 
