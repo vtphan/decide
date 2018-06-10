@@ -7,6 +7,8 @@ from sklearn import metrics
 from sklearn.model_selection import train_test_split, cross_validate
 from sklearn.model_selection import KFold, ShuffleSplit
 import draw_tree
+import lcplot
+from matplotlib import pyplot
 
 #------------------------------------------------------------------------------
 class Model(object):
@@ -31,7 +33,11 @@ class Model(object):
 	#--------------------------------------------------------------------------
 	def _validate(self, cls):
 		cv = KFold(n_splits=10, shuffle=True)
-		print('Cross validating', cls, 'with', cv)
+
+		#---------------------------------------------------------
+		# Cross validate
+		#---------------------------------------------------------
+		print('\n(1) Cross validating', cls, 'with', cv)
 		res = cross_validate(
 			cls,
 			self.X,
@@ -41,6 +47,16 @@ class Model(object):
 		)
 		print('Precision: {}'.format(round(res['test_precision_weighted'].mean(),2)))
 		print('Recall:    {}'.format(round(res['test_recall_weighted'].mean(),2)))
+
+	#--------------------------------------------------------------------------
+	def learning(self):
+		#---------------------------------------------------------
+		# Calculate learning curve
+		#---------------------------------------------------------
+		print('\nCalculate learning curve')
+		lcplot.plot(self.logit, self.X, self.y, title='logit')
+		lcplot.plot(self.dt, self.X, self.y, title='decision_tree')
+		lcplot.plot(self.rf, self.X, self.y, title='random_forest')
 
 	#--------------------------------------------------------------------------
 	def analyze(self, test_size=0.05):
@@ -102,7 +118,7 @@ class Model(object):
 		print('\n(4) Compare decision trees in a random forest')
 		self.rf.fit(X_train, y_train)
 		for i, m in enumerate(self.rf.estimators_):
-			output_rf = 'random_forest_' + str(i)
+			output_rf = 'random_tree_' + str(i)
 			draw_tree.visualize_tree(m, X_train.columns, output_rf)
 			print('Decision process is saved to {}.png'.format(output_rf))
 
