@@ -11,9 +11,11 @@ y = 'Species'
 
 model = decide.Model(df,X,y)
 
-model.validate()		# Validate the model with logit, decision tree, and random forest
+# Validate the model with logit, decision tree, and random forest
+model.validate()
 
-model.analyze(0.2)  	# Analyze a random 20% sample of the data
+# Analyze a random 20% sample of the data
+model.analyze(0.2)
 ```
 
 Comments:
