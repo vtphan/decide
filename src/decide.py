@@ -38,7 +38,7 @@ class Model(object):
 		#---------------------------------------------------------
 		# Cross validate
 		#---------------------------------------------------------
-		print('\n(1) Cross validating', cls, 'with', cv)
+		print('\nCross validating', cls, 'with', cv)
 		res = cross_validate(
 			cls,
 			self.X,
@@ -93,16 +93,12 @@ class Model(object):
 
 		for c in self.logit.classes_:
 			print('{}'.format(c[0:6]), end='\t')
-		print('ClassLabel     \tPredicted')
+		print('ClassLabel     \tCorrect')
 		values = []
 		for i in range(len(y_prob)):
 			v = [ round(p,2) for p in y_prob[i] ]
 			v.append(y_test.values[i])
-			if y_test.values[i]==y_pred[i]:
-				mark = '✔'
-			else:
-				mark = '✘'
-			v.append(mark)
+			v.append('Y' if y_test.values[i]==y_pred[i] else 'no')
 			v.append(max(y_prob[i]))
 			values.append(v)
 
