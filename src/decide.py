@@ -9,7 +9,9 @@ from sklearn.model_selection import KFold, ShuffleSplit
 import draw_tree
 import lcplot
 from matplotlib import pyplot
+import os
 
+OUTPUT_DIR = 'output'
 #------------------------------------------------------------------------------
 class Model(object):
 	def __init__(self, df, X, y,
@@ -50,16 +52,24 @@ class Model(object):
 
 	#--------------------------------------------------------------------------
 	def learning(self):
+		if not os.path.exists(OUTPUT_DIR):
+			os.mkdir(OUTPUT_DIR)
 		#---------------------------------------------------------
 		# Calculate learning curve
 		#---------------------------------------------------------
 		print('\nCalculate learning curve')
-		lcplot.plot(self.logit, self.X, self.y, title='logit')
-		lcplot.plot(self.dt, self.X, self.y, title='decision_tree')
-		lcplot.plot(self.rf, self.X, self.y, title='random_forest')
+		output = os.path.join(OUTPUT_DIR, 'lc_logit.png')
+		lcplot.plot(self.logit, self.X, self.y, title='Logit', output=output)
+		output = os.path.join(OUTPUT_DIR, 'lc_decision_tree.png')
+		lcplot.plot(self.dt, self.X, self.y, title='Decision Tree', output=output)
+		output = os.path.join(OUTPUT_DIR, 'lc_random_forest.png')
+		lcplot.plot(self.rf, self.X, self.y, title='Random Forest', output=output)
 
 	#--------------------------------------------------------------------------
 	def analyze(self, test_size=0.05):
+		if not os.path.exists(OUTPUT_DIR):
+			os.mkdir(OUTPUT_DIR)
+
 		X_train, X_test, y_train, y_test = train_test_split(
 			self.X,
 			self.y,
@@ -107,7 +117,7 @@ class Model(object):
 		# Visualize decisions
 		#---------------------------------------------------------
 		print('\n(3) Visualize the decision making process')
-		output_dt = 'decision_tree'
+		output_dt = os.path.join(OUTPUT_DIR, 'decision_tree')
 		self.dt.fit(X_train, y_train)
 		draw_tree.visualize_tree(self.dt, X_train.columns, output_dt)
 		print('Decision process is saved to {}.png'.format(output_dt))
@@ -118,7 +128,7 @@ class Model(object):
 		print('\n(4) Compare decision trees in a random forest')
 		self.rf.fit(X_train, y_train)
 		for i, m in enumerate(self.rf.estimators_):
-			output_rf = 'random_tree_' + str(i)
+			output_rf = os.path.join(OUTPUT_DIR, 'random_tree_' + str(i))
 			draw_tree.visualize_tree(m, X_train.columns, output_rf)
 			print('Decision process is saved to {}.png'.format(output_rf))
 

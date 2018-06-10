@@ -2,7 +2,7 @@ import numpy
 from matplotlib import pyplot
 from sklearn.model_selection import learning_curve
 
-def plot(estimator, X, y, title="", ylim=None, cv=None, n_jobs=1, train_sizes=numpy.linspace(.50, 0.95, 10)):
+def plot(estimator, X, y, title='', ylim=None, cv=None, n_jobs=1, train_sizes=numpy.linspace(.50, 0.95, 10), output=None):
 	# print(train_sizes)
 	pyplot.figure()
 	pyplot.title(title)
@@ -22,6 +22,7 @@ def plot(estimator, X, y, title="", ylim=None, cv=None, n_jobs=1, train_sizes=nu
 	pyplot.plot(train_sizes, train_scores_mean, 'o-', color="r", label="Training score")
 	pyplot.plot(train_sizes, test_scores_mean, 'o-', color="g", label="Cross-validation score")
 	pyplot.legend(loc="best")
-	pyplot.savefig('lc_' + title + '.png', dpi=150)
-	print('Save learning curve to lc_{}.png'.format(title))
+	if output is not None:
+		pyplot.savefig(output, dpi=150)
+		print('Save learning curve to', output)
 	return pyplot
