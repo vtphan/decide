@@ -8,9 +8,12 @@ DATA = '../data/iris.csv'
 df = pandas.read_csv(DATA)
 X = ['SepalWidth','SepalLength','PetalWidth','PetalLength']
 y = 'Species'
+
 model = decide.Model(df,X,y)
-model.validate()
-model.analyze(0.2)
+
+model.validate()		# Validate the model with logit, decision tree, and random forest
+
+model.analyze(0.2)  	# Analyze a random 20% sample of the data
 ```
 
 Comments:
