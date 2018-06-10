@@ -11,7 +11,6 @@ import lcplot
 from matplotlib import pyplot
 import os
 
-OUTPUT_DIR = 'output'
 #------------------------------------------------------------------------------
 class Model(object):
 	def __init__(self, df, X, y,
@@ -52,6 +51,7 @@ class Model(object):
 
 	#--------------------------------------------------------------------------
 	def learning(self):
+		OUTPUT_DIR = os.path.join(os.getcwd(), 'output')
 		if not os.path.exists(OUTPUT_DIR):
 			os.mkdir(OUTPUT_DIR)
 		#---------------------------------------------------------
@@ -67,6 +67,7 @@ class Model(object):
 
 	#--------------------------------------------------------------------------
 	def analyze(self, test_size=0.05):
+		OUTPUT_DIR = os.path.join(os.getcwd(), 'output')
 		if not os.path.exists(OUTPUT_DIR):
 			os.mkdir(OUTPUT_DIR)
 
