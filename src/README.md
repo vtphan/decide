@@ -78,6 +78,7 @@ RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
 ```
 import pandas
 import decide
+from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 
