@@ -3,7 +3,7 @@ import decide
 
 DATA = '../data/iris.csv'
 df = pandas.read_csv(DATA)
-X = ['SepalWidth','SepalLength','PetalWidth','PetalLength']
+X = ['SepalLength', 'SepalWidth', 'PetalLength', 'PetalWidth']
 y = 'Species'
 
 model = decide.Model(df,X,y)

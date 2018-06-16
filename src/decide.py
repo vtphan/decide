@@ -11,12 +11,17 @@ import lcplot
 from matplotlib import pyplot
 import os
 
+OUTPUT_DIR = os.path.join(os.getcwd(), 'output')
+
 #------------------------------------------------------------------------------
 class Model(object):
-	def __init__(self, df, X, y,
-			logit=LogisticRegression(),
-			decision_tree=DecisionTreeClassifier(),
-			random_forest=RandomForestClassifier(),
+	def __init__(self,
+			df,
+			X,
+			y,
+			logit 			= LogisticRegression(),
+			decision_tree 	= DecisionTreeClassifier(),
+			random_forest 	= RandomForestClassifier(),
 		):
 		self.df = df
 		self.X = df[X]
@@ -24,6 +29,8 @@ class Model(object):
 		self.logit = logit
 		self.dt = decision_tree
 		self.rf = random_forest
+		if not os.path.exists(OUTPUT_DIR):
+			os.mkdir(OUTPUT_DIR)
 
 	#--------------------------------------------------------------------------
 	def validate(self):
@@ -51,9 +58,6 @@ class Model(object):
 
 	#--------------------------------------------------------------------------
 	def learning(self):
-		OUTPUT_DIR = os.path.join(os.getcwd(), 'output')
-		if not os.path.exists(OUTPUT_DIR):
-			os.mkdir(OUTPUT_DIR)
 		#---------------------------------------------------------
 		# Calculate learning curve
 		#---------------------------------------------------------
@@ -66,11 +70,51 @@ class Model(object):
 		lcplot.plot(self.rf, self.X, self.y, title='Random Forest', output=output)
 
 	#--------------------------------------------------------------------------
-	def analyze(self, test_size=0.05):
-		OUTPUT_DIR = os.path.join(os.getcwd(), 'output')
-		if not os.path.exists(OUTPUT_DIR):
-			os.mkdir(OUTPUT_DIR)
+	def predict(self, sample):
+		print('Sample:', sample, '\n')
 
+		print('Estimate class probabilities using logistic regression')
+		self.logit.fit(self.X,self.y)
+		prob = self.logit.predict_proba([sample])[0]
+		for i,c in enumerate(self.logit.classes_):
+			print('Prob({}) = {}'.format(c, round(prob[i])), end='\t')
+		print('\n')
+
+		output_path = os.path.join(OUTPUT_DIR, 'path')
+		self.dt.fit(self.X,self.y)
+		path = self.dt.decision_path([sample])
+		draw_tree.draw_path(self.dt, self.dt.classes_, self.X.columns, path.indices, output_path)
+		print('Draw decision path using decision tree: {}.png'.format(output_path))
+		print('Decision path contains red-bordered shapes.\n')
+
+		print('Estimate class probabilities using random forest')
+		self.rf.fit(self.X,self.y)
+		prob = self.rf.predict_proba([sample])[0]
+		for i,c in enumerate(self.rf.classes_):
+			print('Prob({}) = {}'.format(c, round(prob[i])), end='\t')
+		print('\n')
+
+		print('Features of importance')
+		display_width = max([len(f) for f in self.X.columns])
+		for i, f in enumerate(self.X.columns):
+			print('{:{w}}: {}'.format(f, round(self.rf.feature_importances_[i],4), w=display_width))
+		print()
+
+		for i, m in enumerate(self.rf.estimators_):
+			output_path = os.path.join(OUTPUT_DIR, 'path_' + str(i))
+			path = m.decision_path([sample])
+			draw_tree.draw_path(m, self.rf.classes_, self.X.columns, path.indices, output_path)
+			print('Draw decision for random tree {}: {}.png'.format(i, output_path))
+		print()
+
+		print('Default models')
+		print(self.logit)
+		print(self.dt)
+		print(self.rf)
+		print()
+
+	#--------------------------------------------------------------------------
+	def analyze(self, test_size=0.05):
 		X_train, X_test, y_train, y_test = train_test_split(
 			self.X,
 			self.y,
