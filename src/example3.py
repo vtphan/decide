@@ -2,6 +2,7 @@ import pandas
 import decide
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
 
 DATA = '../data/iris.csv'
 df = pandas.read_csv(DATA)
@@ -12,6 +13,7 @@ model = decide.Model(
 	df,
 	X,
 	y,
+	logit = LogisticRegression(),
 	decision_tree = DecisionTreeClassifier(max_depth=5),
 	random_forest = RandomForestClassifier(max_depth=5, min_samples_leaf=3),
 )
