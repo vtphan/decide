@@ -116,7 +116,7 @@ class Model(object):
 		print('\n(3) Visualize the decision making process')
 		output_dt = os.path.join(OUTPUT_DIR, 'decision_tree')
 		self.dt.fit(X_train, y_train)
-		draw_tree.visualize_tree(self.dt, X_train.columns, output_dt)
+		draw_tree.draw(self.dt, self.dt.classes_, X_train.columns, output_dt)
 		print('Decision process is saved to {}.png'.format(output_dt))
 
 		#---------------------------------------------------------
@@ -126,7 +126,7 @@ class Model(object):
 		self.rf.fit(X_train, y_train)
 		for i, m in enumerate(self.rf.estimators_):
 			output_rf = os.path.join(OUTPUT_DIR, 'random_tree_' + str(i))
-			draw_tree.visualize_tree(m, X_train.columns, output_rf)
+			draw_tree.draw(m, self.rf.classes_, X_train.columns, output_rf)
 			print('Decision process is saved to {}.png'.format(output_rf))
 
 		print()
