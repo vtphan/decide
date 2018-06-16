@@ -90,6 +90,7 @@ model = decide.Model(
 	df,
 	X,
 	y,
+	logit = LogisticRegression(),
 	decision_tree = DecisionTreeClassifier(max_depth=5),
 	random_forest = RandomForestClassifier(max_depth=5, min_samples_leaf=3),
 )
