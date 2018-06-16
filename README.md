@@ -10,3 +10,7 @@ This module provides quick analysis of classification prediction.
 ```
 conda install python-graphviz
 ```
+
+# Usage
+
+See src/README.md
